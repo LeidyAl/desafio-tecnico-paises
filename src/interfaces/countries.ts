@@ -8,8 +8,14 @@ export interface country{
 }
 
 export interface AllCountries{
-  name: string;
-  code: string;
-  continent: string;
-  currency: string;
+  countries: [
+    {
+      name: string;
+      code: string;
+      continent:{
+        name: string;
+      } 
+      currency: string;
+    }
+  ]
 }

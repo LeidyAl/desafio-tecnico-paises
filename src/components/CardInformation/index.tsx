@@ -8,9 +8,8 @@ import {
   CardActionArea,
 } from '@mui/material';
 import { Link } from 'react-router';
-import type { AllCountries } from '../../interfaces/countries';
 
-const CardInformation = ({ name, code, continent, currency }: AllCountries) => {
+const CardInformation = ({ name, code, continent, currency }: any) => {
   return (
     <>
       <Link to={`/details/${code}`}>
@@ -26,7 +25,7 @@ const CardInformation = ({ name, code, continent, currency }: AllCountries) => {
             <CardMedia
               component="img"
               image={`https://flagsapi.com/${code}/flat/64.png`}
-              alt={`Bandera de ${name}`}
+              alt={`Flag's ${name}`}
               sx={{ width: 50 }}
             />
             <CardContent>

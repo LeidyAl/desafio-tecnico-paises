@@ -1,8 +1,22 @@
 import React from 'react';
-import { Grid, TextField, Typography } from '@mui/material';
+import { CircularProgress, Grid, TextField, Typography } from '@mui/material';
 import CardInformation from '../components/CardInformation';
 
+import { GetAllCountries } from '../API/countries';
+import { useQuery } from '@apollo/client';
+import type { AllCountries } from '../interfaces/countries';
+
 const Home = () => {
+  const { data, loading } = useQuery<AllCountries>(GetAllCountries);
+
+  if (!loading)
+    return (
+      <CircularProgress
+        size={100}
+        sx={{ display: 'flex', justifySelf: 'center' }}
+      />
+    );
+
   return (
     <>
       <Grid container spacing={2}>
@@ -25,14 +39,18 @@ const Home = () => {
             fullWidth
           />
         </Grid>
-        <Grid size={3}>
-          <CardInformation
-            name="Colombia"
-            continent="South America"
-            currency="COP"
-            code="CO"
-          />
-        </Grid>
+        {data?.countries.map(({ name, code, continent, currency }) => {
+          return (
+            <Grid size={3}>
+              <CardInformation
+                name={name}
+                continent={continent.name}
+                currency={currency}
+                code={code}
+              />
+            </Grid>
+          );
+        })}
       </Grid>
     </>
   );
