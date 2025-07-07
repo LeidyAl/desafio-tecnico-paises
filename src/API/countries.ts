@@ -6,7 +6,8 @@ query  {
     name,
     code, 
     continent{
-      name
+      name, 
+      code
     }, 
     currency, 
   }
@@ -27,6 +28,15 @@ query GetCountry ($code: ID!){
     }, 
     currency, 
     phone
+  }
+}
+`
+
+export const GetContinents = gql`
+query{
+  continents{
+    name,
+    code
   }
 }
 `

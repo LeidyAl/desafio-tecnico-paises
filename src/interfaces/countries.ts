@@ -21,8 +21,18 @@ export interface AllCountries{
       code: string;
       continent:{
         name: string;
+        code: string
       } 
       currency: string;
+    }
+  ]
+}
+
+export interface Continents{
+  continents: [
+    {
+      name: string,
+      code: string
     }
   ]
 }
