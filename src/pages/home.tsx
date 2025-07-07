@@ -1,21 +1,16 @@
 import React from 'react';
-import { CircularProgress, Grid, TextField, Typography } from '@mui/material';
+import { Grid, TextField, Typography } from '@mui/material';
 import CardInformation from '../components/CardInformation';
 
 import { GetAllCountries } from '../API/countries';
 import { useQuery } from '@apollo/client';
 import type { AllCountries } from '../interfaces/countries';
+import Loading from '../components/Loading';
 
 const Home = () => {
   const { data, loading } = useQuery<AllCountries>(GetAllCountries);
 
-  if (!loading)
-    return (
-      <CircularProgress
-        size={100}
-        sx={{ display: 'flex', justifySelf: 'center' }}
-      />
-    );
+  if (loading) return <Loading />;
 
   return (
     <>

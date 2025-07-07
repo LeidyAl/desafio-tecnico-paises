@@ -1,10 +1,17 @@
 export interface country{
-  name: string,
-  capital: string, 
-  code: string,
-  continent:  string, 
-  currency: string, 
-  phone: string
+  country:{
+    name: string,
+    capital: string, 
+    code: string,
+    currency: string, 
+    continent: {
+      name: string, 
+    }
+    phone: string, 
+    languages: [{
+      name: string, 
+   }],
+  }
 }
 
 export interface AllCountries{

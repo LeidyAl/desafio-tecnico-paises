@@ -10,7 +10,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="details/:idcountry" element={<Details />} />
+          <Route path="details/:code" element={<Details />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
