@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Grid, MenuItem, TextField, Typography } from '@mui/material';
 import CardInformation from '../components/CardInformation';
 
@@ -9,12 +9,33 @@ import Loading from '../components/Loading';
 
 const Home = () => {
   const { data, loading } = useQuery<AllCountries>(GetAllCountries);
-
-  const [filterByContient, setFilterByContinent] = useState('ALL');
-
   const { data: dataContinent } = useQuery<Continents>(GetContinents);
-  const ChangeContinent = (contient: string) => {
-    setFilterByContinent(contient);
+
+  const [filterByContinent, setFilterByContinent] = useState('ALL');
+  const [filterByName, setFilterByName] = useState('');
+  const [filterByCurrency, setFilterByCurrency] = useState('');
+
+  const filteredCountries = useMemo(() => {
+    if (!data?.countries) return [];
+    return data?.countries?.filter(({ name, continent, currency }) => {
+      const matchesContinent =
+        filterByContinent === 'ALL' || continent.code === filterByContinent;
+      const matchesName = name.toLowerCase().includes(filterByName);
+      const matchesCurrency = currency?.toLowerCase().includes(filterByCurrency);
+      return matchesContinent && matchesName && matchesCurrency;
+    });
+  }, [data, filterByContinent, filterByName, filterByCurrency]);
+
+  const ChangeFilterName = (name: string) => {
+    setFilterByName(name?.toLowerCase());
+  };
+
+  const ChangeFilterCurrency = (currency: string) => {
+    setFilterByCurrency(currency?.toLowerCase());
+  };
+
+  const ChangeContinent = (continent: string) => {
+    setFilterByContinent(continent);
   };
 
   if (loading) return <Loading />;
@@ -39,32 +60,29 @@ const Home = () => {
               label="Search field"
               type="search"
               size="small"
+              onChange={(e) => ChangeFilterName(e.target.value)}
+              value={filterByName}
+              fullWidth
+            />
+          </Grid>
+          <Grid size={3}>
+            <TextField
+              label="Search By Currency"
+              type="search"
+              size="small"
+              onChange={(e) => ChangeFilterCurrency(e.target.value)}
+              value={filterByCurrency}
               fullWidth
             />
           </Grid>
           <Grid size={3}>
             <TextField
               select
-              label="Filter By"
-              variant="outlined"
-              fullWidth
-              size="small"
-            >
-              {/* {currencies.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))} */}
-            </TextField>
-          </Grid>
-          <Grid size={3}>
-            <TextField
-              select
-              label="Filter By Contient"
+              label="Filter By Continent"
               fullWidth
               size="small"
               variant="outlined"
-              defaultValue="ALL"
+              value={filterByContinent}
               onChange={(e) => ChangeContinent(e.target.value)}
             >
               <MenuItem key="ALL" value="ALL">
@@ -78,46 +96,17 @@ const Home = () => {
             </TextField>
           </Grid>
         </Grid>
-        {filterByContient !== 'ALL'
-          ? data?.countries
-              .filter(({ continent }) => continent.code === filterByContient)
-              .map(({ code, name, continent, currency }) => {
-                return (
-                  <Grid size={3}>
-                    <CardInformation
-                      name={name}
-                      continent={continent.name}
-                      currency={currency}
-                      code={code}
-                    />
-                  </Grid>
-                );
-              })
-          : data?.countries.map(({ code, name, continent, currency }) => {
-              return (
-                <Grid size={3}>
-                  <CardInformation
-                    name={name}
-                    continent={continent.name}
-                    currency={currency}
-                    code={code}
-                  />
-                </Grid>
-              );
-            })}
 
-        {/* {data?.countries.map(({ name, code, continent, currency }) => {
-          return (
-            <Grid size={3}>
-              <CardInformation
-                name={name}
-                continent={continent.name}
-                currency={currency}
-                code={code}
-              />
-            </Grid>
-          );
-        })} */}
+        {filteredCountries?.map(({ code, name, continent, currency }) => (
+          <Grid size={3}>
+            <CardInformation
+              name={name}
+              continent={continent.name}
+              currency={currency}
+              code={code}
+            />
+          </Grid>
+        ))}
       </Grid>
     </>
   );
